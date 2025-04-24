@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FSNT Zip Code Lookup</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #005581;
+    }
+    #logo {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+    input[type="text"], input[type="password"] {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+      border: 2px solid #005581;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    table {
+      margin: 20px auto;
+      width: 90%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    th {
+      background-color: #005581;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #eaf3f7;
+    }
+    #appContent { display: none; }
+  </style>
+</head>
+<body>
+  <img id="logo" src="fiberseal_logo.jpg" alt="FSNT Logo">
+
+  <div id="loginScreen">
+    <h1>Enter Password to Access</h1>
+    <input type="password" id="passwordInput" placeholder="Password">
+    <div><button onclick="checkPassword()">Enter</button></div>
+  </div>
+
+  <div id="appContent">
+    <h1>Zip Code Lookup</h1>
+    <input type="text" id="searchInput" placeholder="Enter a zip code..." onkeyup="searchZip()" />
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Zip Code</th>
+          <th>Consultant</th>
+          <th>Territory</th>
+          <th>City</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const data = [
+  {
+    "zip": "75225",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "University Park"
+  },
+  {
+    "zip": "75230",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75209",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Highland Park"
+  },
+  {
+    "zip": "75214",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75032",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Rockwall"
+  },
+  {
+    "zip": "75182",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Sunnyvale"
+  },
+  {
+    "zip": "75218",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75238",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75089",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Rowlett"
+  },
+  {
+    "zip": "75088",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Rowlett"
+  },
+  {
+    "zip": "75243",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75043",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Garland"
+  },
+  {
+    "zip": "75231",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75040",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Garland"
+  },
+  {
+    "zip": "75042",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Garland"
+  },
+  {
+    "zip": "75251",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75087",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Rockwall"
+  },
+  {
+    "zip": "75126",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Forney"
+  },
+  {
+    "zip": "75142",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Kaufman"
+  },
+  {
+    "zip": "75160",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Terrell"
+  },
+  {
+    "zip": "75205",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Highland Park"
+  },
+  {
+    "zip": "75229",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75201",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75219",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Highland Park"
+  },
+  {
+    "zip": "75204",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75039",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Irving"
+  },
+  {
+    "zip": "75063",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Irving"
+  },
+  {
+    "zip": "75202",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75052",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Grand Prairie"
+  },
+  {
+    "zip": "75208",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75115",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "DeSoto"
+  },
+  {
+    "zip": "75038",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Irving"
+  },
+  {
+    "zip": "75104",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Cedar Hill"
+  },
+  {
+    "zip": "75220",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75062",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Irving"
+  },
+  {
+    "zip": "75050",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Grand Prairie"
+  },
+  {
+    "zip": "75211",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75217",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75227",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75207",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75235",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75223",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75246",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75232",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75051",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Grand Prairie"
+  },
+  {
+    "zip": "76065",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Midlothian"
+  },
+  {
+    "zip": "75212",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75215",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75163",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Trinidad"
+  },
+  {
+    "zip": "75109",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Corsicana"
+  },
+  {
+    "zip": "75751",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Athens"
+  },
+  {
+    "zip": "75156",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Mabank"
+  },
+  {
+    "zip": "75143",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Kemp"
+  },
+  {
+    "zip": "75147",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Mabank"
+  },
+  {
+    "zip": "75148",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Malakoff"
+  },
+  {
+    "zip": "75157",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Rosser"
+  },
+  {
+    "zip": "75226",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75247",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "76092",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Southlake"
+  },
+  {
+    "zip": "76034",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Colleyville"
+  },
+  {
+    "zip": "75022",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Flower Mound"
+  },
+  {
+    "zip": "76226",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Argyle"
+  },
+  {
+    "zip": "76248",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Keller"
+  },
+  {
+    "zip": "76262",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Roanoke"
+  },
+  {
+    "zip": "76005",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Arlington"
+  },
+  {
+    "zip": "76109",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76107",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76051",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Grapevine"
+  },
+  {
+    "zip": "76063",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Mansfield"
+  },
+  {
+    "zip": "76179",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76052",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Haslet"
+  },
+  {
+    "zip": "76182",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "North Richland Hills"
+  },
+  {
+    "zip": "76126",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76016",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Dalworthington Gardens"
+  },
+  {
+    "zip": "76132",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76021",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Bedford"
+  },
+  {
+    "zip": "76017",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Arlington"
+  },
+  {
+    "zip": "76002",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Arlington"
+  },
+  {
+    "zip": "76123",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76020",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Azle"
+  },
+  {
+    "zip": "76108",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76116",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76040",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Euless"
+  },
+  {
+    "zip": "76112",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76110",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76053",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Hurst"
+  },
+  {
+    "zip": "76028",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Burleson"
+  },
+  {
+    "zip": "76114",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76008",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Aledo"
+  },
+  {
+    "zip": "76117",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Haltom City"
+  },
+  {
+    "zip": "76111",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76087",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Weatherford"
+  },
+  {
+    "zip": "76104",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76012",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Arlington"
+  },
+  {
+    "zip": "76134",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "75093",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "75078",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Prosper"
+  },
+  {
+    "zip": "75034",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Frisco"
+  },
+  {
+    "zip": "75035",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Frisco"
+  },
+  {
+    "zip": "75033",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Frisco"
+  },
+  {
+    "zip": "75248",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75019",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Coppell"
+  },
+  {
+    "zip": "75013",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Allen"
+  },
+  {
+    "zip": "75024",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "75072",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "McKinney"
+  },
+  {
+    "zip": "75028",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Flower Mound"
+  },
+  {
+    "zip": "75025",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "75071",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "McKinney"
+  },
+  {
+    "zip": "75002",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Allen"
+  },
+  {
+    "zip": "75056",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "The Colony"
+  },
+  {
+    "zip": "75036",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Frisco"
+  },
+  {
+    "zip": "75009",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Celina"
+  },
+  {
+    "zip": "75244",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Farmers Branch"
+  },
+  {
+    "zip": "75094",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "75068",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Little Elm"
+  },
+  {
+    "zip": "75070",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "McKinney"
+  },
+  {
+    "zip": "75082",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Richardson"
+  },
+  {
+    "zip": "75077",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Lewisville"
+  },
+  {
+    "zip": "75098",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Wylie"
+  },
+  {
+    "zip": "75007",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Carrollton"
+  },
+  {
+    "zip": "75048",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Sachse"
+  },
+  {
+    "zip": "75023",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "75080",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Richardson"
+  },
+  {
+    "zip": "76227",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Aubrey"
+  },
+  {
+    "zip": "75252",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "75010",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Carrollton"
+  },
+  {
+    "zip": "76210",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Denton"
+  },
+  {
+    "zip": "75075",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "75287",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75069",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "McKinney"
+  },
+  {
+    "zip": "75166",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Lavon"
+  },
+  {
+    "zip": "75001",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Addison"
+  },
+  {
+    "zip": "75006",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Carrollton"
+  },
+  {
+    "zip": "75081",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Richardson"
+  },
+  {
+    "zip": "75044",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Garland"
+  },
+  {
+    "zip": "75254",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Addison"
+  },
+  {
+    "zip": "75234",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Farmers Branch"
+  },
+  {
+    "zip": "76266",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Sanger"
+  },
+  {
+    "zip": "76207",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Denton"
+  },
+  {
+    "zip": "75065",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Lake Dallas"
+  },
+  {
+    "zip": "75409",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Anna"
+  },
+  {
+    "zip": "76258",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Pilot Point"
+  },
+  {
+    "zip": "75240",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "76201",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Denton"
+  },
+  {
+    "zip": "75074",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Plano"
+  },
+  {
+    "zip": "76240",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Gainesville"
+  },
+  {
+    "zip": "75495",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Van Alstyne"
+  },
+  {
+    "zip": "75135",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Caddo Mills"
+  },
+  {
+    "zip": "75020",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Denison"
+  },
+  {
+    "zip": "75076",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Pottsboro"
+  },
+  {
+    "zip": "75703",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Tyler"
+  },
+  {
+    "zip": "76049",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Granbury"
+  },
+  {
+    "zip": "75701",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Tyler"
+  },
+  {
+    "zip": "76033",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Cleburne"
+  },
+  {
+    "zip": "76308",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Wichita Falls"
+  },
+  {
+    "zip": "75757",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Bullard"
+  },
+  {
+    "zip": "76302",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Wichita Falls"
+  },
+  {
+    "zip": "76366",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Holliday"
+  },
+  {
+    "zip": "76431",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Chico"
+  },
+  {
+    "zip": "75686",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Pittsburg"
+  },
+  {
+    "zip": "75706",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Tyler"
+  },
+  {
+    "zip": "75224",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75057",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Lewisville"
+  },
+  {
+    "zip": "75067",
+    "consultant": "LM/KBP",
+    "territory": "North DFW",
+    "city": "Lewisville"
+  },
+  {
+    "zip": "75114",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Crandall"
+  },
+  {
+    "zip": "75149",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Mesquite"
+  },
+  {
+    "zip": "75189",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Fate"
+  },
+  {
+    "zip": "75203",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75228",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75233",
+    "consultant": "KBP",
+    "territory": "Central/South Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "75482",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Sulphur Springs"
+  },
+  {
+    "zip": "75752",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Athens"
+  },
+  {
+    "zip": "76009",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Alvarado"
+  },
+  {
+    "zip": "76013",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Arlington"
+  },
+  {
+    "zip": "76044",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Godley"
+  },
+  {
+    "zip": "76048",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Brazos Bend"
+  },
+  {
+    "zip": "76120",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76133",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76180",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Fort Worth"
+  },
+  {
+    "zip": "76247",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Justin"
+  },
+  {
+    "zip": "76449",
+    "consultant": "FSNT",
+    "territory": "FSNT",
+    "city": "Graford"
+  },
+  {
+    "zip": "75206",
+    "consultant": "LM",
+    "territory": "North Dallas",
+    "city": "Dallas"
+  },
+  {
+    "zip": "76011",
+    "consultant": "FW",
+    "territory": "Fort Worth",
+    "city": "Arlington"
+  }
+];
+
+    function checkPassword() {
+      const input = document.getElementById("passwordInput").value;
+      if (input === "Fiber25") {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("appContent").style.display = "block";
+        renderTable(data);
+      } else {
+        alert("Incorrect password. Please try again.");
+      }
+    }
+
+    function searchZip() {
+      const input = document.getElementById("searchInput").value;
+      const filtered = data.filter(row => row.zip.includes(input));
+      renderTable(filtered);
+    }
+
+    function renderTable(rows) {
+      const tbody = document.querySelector("#resultsTable tbody");
+      tbody.innerHTML = "";
+      rows.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row.zip}</td><td>${row.consultant}</td><td>${row.territory}</td><td>${row.city}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>
